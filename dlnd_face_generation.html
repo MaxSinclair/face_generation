@@ -13450,8 +13450,7 @@ div#notebook {
     <span class="sd">&#39;&#39;&#39; Scale takes in an image x and returns that image, scaled</span>
 <span class="sd">       with a feature_range of pixel values from -1 to 1. </span>
 <span class="sd">       This function assumes that the input x is already scaled from 0-1.&#39;&#39;&#39;</span>
-    <span class="c1"># assume x is scaled to (0, 1)</span>
-    <span class="c1"># scale to feature_range and return scaled x</span>
+
     <span class="n">mn</span><span class="p">,</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">feature_range</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">mx</span> <span class="o">-</span> <span class="n">mn</span><span class="p">)</span> <span class="o">+</span> <span class="n">mn</span>
     
@@ -13663,14 +13662,10 @@ Max:  tensor(0.7725)
                 <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">leaky_relu</span><span class="p">(</span><span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-            <span class="c1">#print(f&quot;==== x shape: {x.shape}&quot;)</span>
-        <span class="c1"># complete forward function</span>
-        <span class="c1">#print(f&quot;x shape: {x.shape} self.out_channels: {self.out_channels}&quot;)</span>
+
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">conv_out_size</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">conv_out_size</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="c1">#x = F.leaky_relu(self.fc_1(x), 0.2)</span>
-        <span class="c1">#x = self.fc_2(x)</span>
-        
+      
         <span class="k">return</span> <span class="n">x</span>
 
 
@@ -13767,15 +13762,12 @@ Max:  tensor(0.7725)
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conv_dim</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ResidualBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># conv_dim = number of inputs  </span>
-        <span class="c1"># define two convolutional layers + batch normalization that will act as our residual function, F(x)</span>
-        <span class="c1"># layers should have the same shape input as output; I suggest a kernel_size of 3</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span> <span class="o">=</span> <span class="n">conv_single</span><span class="p">(</span><span class="n">conv_dim</span><span class="p">,</span> <span class="n">conv_dim</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conv_2</span> <span class="o">=</span> <span class="n">conv_single</span><span class="p">(</span><span class="n">conv_dim</span><span class="p">,</span> <span class="n">conv_dim</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>        
         
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="c1"># apply a ReLu activation the outputs of the first layer</span>
-        <span class="c1"># return a summed output, x + resnet_block(x)</span>
+
         <span class="n">out</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span>
         
@@ -13842,8 +13834,7 @@ Max:  tensor(0.7725)
         <span class="n">conv_dim</span> <span class="o">=</span> <span class="n">conv_dim</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conv_initial_channels</span> <span class="o">=</span> <span class="n">conv_dim</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">n_deconv_layers</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="c1"># print(f&quot;self.conv_initial_channels: {self.conv_initial_channels} final image: {2**self.n_deconv_layers}&quot;)</span>
-            
+  
         <span class="bp">self</span><span class="o">.</span><span class="n">fc_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">z_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_initial_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">img_size</span><span class="p">)</span> 
         <span class="c1"># 2. Define the resnet part of the generator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resnet_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_block_generator</span><span class="p">(</span><span class="n">n_res_blocks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_initial_channels</span><span class="p">)</span>
@@ -13889,9 +13880,6 @@ Max:  tensor(0.7725)
 
             <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">blocks</span><span class="p">)</span>
 
-<span class="c1"># t = Generator(100,8)</span>
-<span class="c1"># print(t)</span>
-    
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">DON&#39;T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE</span>
 <span class="sd">&quot;&quot;&quot;</span>
